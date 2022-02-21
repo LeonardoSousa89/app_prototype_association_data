@@ -22,7 +22,7 @@ module.exports = {
  development: {
     client: 'postgresql',
     connection: {
-      database: 'dataauthtest',
+      database: 'edata',
       user:     'postgres',
       password: '1234'
     },
