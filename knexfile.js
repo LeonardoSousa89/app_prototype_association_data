@@ -3,12 +3,12 @@
  */
 module.exports = {
  production: {
-    client: 'postgresql',
+    client: '',
     connection: {
-      database: 'd1l83l3kkmi1l1',
-      host:'ec2-52-45-83-163.compute-1.amazonaws.com',
-      user:     'gtccawsfnczqsg',
-      password: '9cf2dff9af900ef08ea9dfc50566c7bdf4c4f66bca0aaf690f924360202e5509',
+      database: '',
+      host:'',
+      user:     '',
+      password: '',
       ssl: { rejectUnauthorized: false }
     },
     pool: {

@@ -1,6 +1,6 @@
 const mode    = require('../knexfile')
 const db      = require('../db/db')
-// const method  = require('../methods/validation')
+const method  = require('../methods/validation')
 
 const bcrypt  = require('bcrypt')
 const express = require('express')
@@ -29,7 +29,7 @@ server.route('/signup').post((req, res)=>{
     user.pass = cryptograph(user.pass)
 
     db.insert(user)
-      .table('authtest')
+      .table('edatauser')
       .then(_ => res.status(201).json())
       .catch(err => res.status(400).send(err))
 })
@@ -44,7 +44,7 @@ server.route('/login').post(async(req, res)=>{
                                                 .send('Email e senha não informados!')
     
         const searchUser = await db.where({ email: user.email })
-                                   .table('authtest')
+                                   .table('edatauser')
                                    .first()
     
         if(!searchUser) return res.status(401).send('Usuário não encontrado!')
@@ -57,13 +57,49 @@ server.route('/login').post(async(req, res)=>{
             if(passwordCompare) {
                    return db.where({email: user.email})
                             .first()
-                            .table('authtest')
-                            .then(_ => res.status(200).redirect('http://192.168.100.20:3000/app' || 'http://localhost:3000/app'))
+                            .table('edatauser')
+                            .then(_ => res.status(200).json())
                             .catch(err => res.status(400).json(err))
          }
      }
   
 })
 
+server.route('/userdata').post(async(req, res)=>{
+    const user = { ...req.body }
+ 
+    const userData = {
+            userdesc :user.userdesc,
+            userimg: user.userimg,
+            id_information: user.id_information
+    }
+   
+    return db.insert(userData)
+             .table('edatauserinformation')
+             .then(userData => res.status(200).json(userData))
+             .catch(err => res.status(400).json(err))
+    
+})
+
+server.route('/admin').get(async(req, res)=>{
+
+    return db.select()
+             .table('edatauser')
+             .innerJoin('edatauserinformation','id_user','id_information')
+             .then(userData => res.status(200).json(userData))
+             .catch(err => res.status(400).json(err))
+
+})
+
+server.route('/app/:id').get(async(req, res)=>{
+
+    return db.select(['userimg','userdesc'])
+             .table('edatauser')
+             .innerJoin('edatauserinformation','id_user','id_information')
+             .where('id_user', req.params.id)
+             .then(userData => res.status(200).json(userData))
+             .catch(err => res.status(400).json(err))
+
+})
 
 module.exports = server
