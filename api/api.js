@@ -33,7 +33,6 @@ server.route('/signup').post((req, res)=>{
 
 
 
-
 server.route('/login').post(async(req, res)=>{
     const user = {  ...req.body  }
 
@@ -61,7 +60,6 @@ server.route('/login').post(async(req, res)=>{
  }
 
 })
-
 
 
 
