@@ -11,6 +11,9 @@ CREATE TABLE IF NOT EXISTS edatauser(
     email VARCHAR(100) NOT NULL UNIQUE,
     pass VARCHAR(250)
 );
+ALTER TABLE edatauser ADD COLUMN adm VARCHAR(100);
+ALTER TABLE edatauser DROP COLUMN adm;
+
 DROP TABLE edatauser;
 
 SELECT * FROM edatauser;
@@ -28,6 +31,9 @@ SELECT * FROM edatauserinformation;
 
 /*EXAMPLE CODE USE WHEN IT'S NEED*/
 DELETE FROM edatauserinformation WHERE id = '<id_passed_this_field>';
+DELETE FROM edatauserinformation;
+
+DELETE FROM edatauser;
 
 /*EXAMPLE CODE USE WHEN IT'S NEED*/
 UPDATE edatauserinformation SET userdesc id = '<new_desc>' WHERE userdesc = '<old_desc>';
@@ -43,3 +49,5 @@ SELECT u.id_user, u.username, u.email, i.userimg, i.userdesc
 FROM  edatauser u 
 INNER JOIN edatauserinformation i
 ON id_user = id_information;
+
+

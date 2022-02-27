@@ -27,38 +27,12 @@ server.route('/signup').post((req, res)=>{
 
     db.insert(user)
       .table('edatauser')
-      .then(_ => res.status(201).json())
+      .then(_ => res.status(201).send())
       .catch(err => res.status(400).send(err))
 })
 
-//adicionar ao postgres a coluna admin
-server.route('/login/adm').post(async(req, res)=>{
-        const user = {  ...req.body  }
 
-        if(!user.email || !user.pass) return res.status(400)
-                                                .send('Email e senha não informados!')
-    
-        const searchUser = await db.where({ email: user.email })
-                                   .table('edatauser')
-                                   .first()
-    
-        if(!searchUser) return res.status(401).send('Usuário não encontrado!')
-    
-        if(searchUser) {
-            const passwordCompare = bcrypt.compareSync(user.pass,searchUser.pass)
-    
-            if(!passwordCompare) return res.status(401).send('Email/Senha inválidos!')
-    
-            if(passwordCompare) {
-                   return db.where({email: user.email})
-                            .first()
-                            .table('edatauser')
-                            .then(data =>res.status(200).redirect('http://192.168.100.20:8081/admin'))
-                            .catch(err => res.status(400).json(err))
-         }
-     }
-  
-})
+
 
 server.route('/login').post(async(req, res)=>{
     const user = {  ...req.body  }
@@ -81,12 +55,15 @@ server.route('/login').post(async(req, res)=>{
                return db.where({email: user.email})
                         .first()
                         .table('edatauser')
-                        .then(/** */)
+                        .then(_ => res.status(200).send())
                         .catch(err => res.status(400).json(err))
      }
  }
 
 })
+
+
+
 
 server.route('/userdata').post(async(req, res)=>{
     const user = { ...req.body }
@@ -99,24 +76,16 @@ server.route('/userdata').post(async(req, res)=>{
    
     return db.insert(userData)
              .table('edatauserinformation')
-             .then(userData => res.status(200).json(userData))
+             .then(_ => res.status(200).send(_))
              .catch(err => res.status(400).json(err))
     
 })
 
-server.route('/admin').get(async(req, res)=>{
 
-    return db.select()
-             .table('edatauser')
-             .innerJoin('edatauserinformation','id_user','id_information')
-             .then(userData => res.status(200).json(userData))
-             .catch(err => res.status(400).json(err))
-
-})
 
 server.route('/app/:id').get(async(req, res)=>{
 
-    return db.select(['userimg','userdesc'])
+    return db.select(['id_user','userimg','userdesc'])
              .table('edatauser')
              .innerJoin('edatauserinformation','id_user','id_information')
              .where('id_user', req.params.id)
